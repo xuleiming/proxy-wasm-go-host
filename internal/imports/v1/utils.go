@@ -18,8 +18,8 @@
 package v1
 
 import (
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
 )
 
 func copyIntoInstance(instance common.WasmInstance, value string, retPtr int32, retSize int32) v1.WasmResult {

@@ -28,15 +28,12 @@ import (
 	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 	"github.com/baidu/go-lib/log"
-	// "mosn.io/mosn/pkg/types"
-	// "mosn.io/mosn/pkg/wasm/abi"
-	// "mosn.io/pkg/utils"
 
-	importsv1 "mosn.io/proxy-wasm-go-host/internal/imports/v1"
-	importsv2 "mosn.io/proxy-wasm-go-host/internal/imports/v2"
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
-	v2 "mosn.io/proxy-wasm-go-host/proxywasm/v2"
+	importsv1 "github.com/bfenetworks/proxy-wasm-go-host/internal/imports/v1"
+	importsv2 "github.com/bfenetworks/proxy-wasm-go-host/internal/imports/v2"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
+	v2 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v2"
 )
 
 var (
@@ -50,7 +47,6 @@ type Instance struct {
 
 	runtime  wazero.Runtime
 	instance api.Module
-	// abiList  []types.ABI
 
 	lock     sync.Mutex
 	started  uint32
@@ -137,13 +133,6 @@ func (i *Instance) Start() error {
 		panic(err)
 	}
 
-/* 	i.abiList = abi.GetABIList(i)
-
-	// Instantiate any ABI needed by the guest.
-	for _, abi := range i.abiList {
-		abi.OnInstanceCreate(i)
-	}
- */
 	ins, err := r.Instantiate(ctx, i.module.rawBytes)
 	if err != nil {
 		r.Close(ctx)
@@ -151,11 +140,6 @@ func (i *Instance) Start() error {
 		return err
 	}
 
-/* 	// Handle any ABI requirements after the guest is instantiated.
-	for _, abi := range i.abiList {
-		abi.OnInstanceStart(i)
-	}
- */
 	i.instance = ins
 
 	atomic.StoreUint32(&i.started, 1)
@@ -169,14 +153,7 @@ func (i *Instance) Stop() {
 		for i.refCount > 0 {
 			i.stopCond.Wait()
 		}
-		swapped := atomic.CompareAndSwapUint32(&i.started, 1, 0)
 		i.lock.Unlock()
-
-		if swapped {
-/* 			for _, abi := range i.abiList {
-				abi.OnInstanceDestroy(i)
-			}
- */		}
 
 		if r := i.runtime; r != nil {
 			r.Close(ctx)

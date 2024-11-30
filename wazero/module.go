@@ -22,7 +22,7 @@ import (
 
 	"github.com/tetratelabs/wazero"
 
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
 )
 
 type Module struct {

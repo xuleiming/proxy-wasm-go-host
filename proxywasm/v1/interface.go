@@ -17,7 +17,7 @@
 
 package v1
 
-import "mosn.io/proxy-wasm-go-host/proxywasm/common"
+import "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
 
 // Exports contains ABI that exported by wasm module.
 type Exports interface {

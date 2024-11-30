@@ -20,7 +20,7 @@ package v1
 import (
 	"context"
 
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
 )
 
 func (h *host) ProxyDefineMetric(ctx context.Context, metricType int32, namePtr int32, nameSize int32, returnMetricId int32) int32 {

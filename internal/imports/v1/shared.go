@@ -20,7 +20,7 @@ package v1
 import (
 	"context"
 
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
 )
 
 func (h *host) ProxyGetProperty(ctx context.Context, keyPtr int32, keySize int32, returnValueData int32, returnValueSize int32) int32 {

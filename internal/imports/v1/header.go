@@ -20,8 +20,8 @@ package v1
 import (
 	"context"
 
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
 )
 
 // u32 is the fixed size of a uint32 in little-endian encoding.

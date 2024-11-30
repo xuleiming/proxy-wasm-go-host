@@ -1,4 +1,4 @@
-module mosn.io/proxy-wasm-go-host
+module github.com/bfenetworks/proxy-wasm-go-host
 
 go 1.18
 

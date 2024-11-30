@@ -25,9 +25,9 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
-	"mosn.io/proxy-wasm-go-host/wazero"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
+	"github.com/bfenetworks/proxy-wasm-go-host/wazero"
 )
 
 var (

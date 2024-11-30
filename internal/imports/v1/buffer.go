@@ -20,8 +20,8 @@ package v1
 import (
 	"context"
 
-	"mosn.io/proxy-wasm-go-host/proxywasm/common"
-	v1 "mosn.io/proxy-wasm-go-host/proxywasm/v1"
+	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
+	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
 )
 
 func GetBuffer(instance common.WasmInstance, bufferType v1.BufferType) common.IoBuffer {
