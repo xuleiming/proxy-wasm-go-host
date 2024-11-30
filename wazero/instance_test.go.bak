@@ -139,7 +139,7 @@ func TestRefCount(t *testing.T) {
 	module := vm.NewModule(simpleWasm)
 	ins := NewInstance(vm.(*VM), module.(*Module))
 
-	ins.abiList = []types.ABI{abi}
+	// ins.abiList = []types.ABI{abi}
 
 	require.False(t, ins.Acquire())
 

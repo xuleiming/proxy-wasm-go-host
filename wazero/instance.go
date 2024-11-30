@@ -27,10 +27,10 @@ import (
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
-	"mosn.io/mosn/pkg/log"
-	"mosn.io/mosn/pkg/types"
-	"mosn.io/mosn/pkg/wasm/abi"
-	"mosn.io/pkg/utils"
+	"github.com/baidu/go-lib/log"
+	// "mosn.io/mosn/pkg/types"
+	// "mosn.io/mosn/pkg/wasm/abi"
+	// "mosn.io/pkg/utils"
 
 	importsv1 "mosn.io/proxy-wasm-go-host/internal/imports/v1"
 	importsv2 "mosn.io/proxy-wasm-go-host/internal/imports/v2"
@@ -50,7 +50,7 @@ type Instance struct {
 
 	runtime  wazero.Runtime
 	instance api.Module
-	abiList  []types.ABI
+	// abiList  []types.ABI
 
 	lock     sync.Mutex
 	started  uint32
@@ -133,29 +133,29 @@ func (i *Instance) Start() error {
 
 	if _, err := wasi_snapshot_preview1.NewBuilder(r).Instantiate(ctx); err != nil {
 		r.Close(ctx)
-		log.DefaultLogger.Warnf("[wazero][instance] Start fail to create wasi_snapshot_preview1 env, err: %v", err)
+		log.Logger.Warn("[wazero][instance] Start fail to create wasi_snapshot_preview1 env, err: %v", err)
 		panic(err)
 	}
 
-	i.abiList = abi.GetABIList(i)
+/* 	i.abiList = abi.GetABIList(i)
 
 	// Instantiate any ABI needed by the guest.
 	for _, abi := range i.abiList {
 		abi.OnInstanceCreate(i)
 	}
-
+ */
 	ins, err := r.Instantiate(ctx, i.module.rawBytes)
 	if err != nil {
 		r.Close(ctx)
-		log.DefaultLogger.Errorf("[wazero][instance] Start failed to instantiate module, err: %v", err)
+		log.Logger.Error("[wazero][instance] Start failed to instantiate module, err: %v", err)
 		return err
 	}
 
-	// Handle any ABI requirements after the guest is instantiated.
+/* 	// Handle any ABI requirements after the guest is instantiated.
 	for _, abi := range i.abiList {
 		abi.OnInstanceStart(i)
 	}
-
+ */
 	i.instance = ins
 
 	atomic.StoreUint32(&i.started, 1)
@@ -164,7 +164,7 @@ func (i *Instance) Start() error {
 }
 
 func (i *Instance) Stop() {
-	utils.GoWithRecover(func() {
+	// utils.GoWithRecover(func() {
 		i.lock.Lock()
 		for i.refCount > 0 {
 			i.stopCond.Wait()
@@ -173,15 +173,15 @@ func (i *Instance) Stop() {
 		i.lock.Unlock()
 
 		if swapped {
-			for _, abi := range i.abiList {
+/* 			for _, abi := range i.abiList {
 				abi.OnInstanceDestroy(i)
 			}
-		}
+ */		}
 
 		if r := i.runtime; r != nil {
 			r.Close(ctx)
 		}
-	}, nil)
+	// }, nil)
 }
 
 // return true is Instance is started, false if not started.
@@ -191,7 +191,7 @@ func (i *Instance) checkStart() bool {
 
 func (i *Instance) RegisterImports(abiName string) error {
 	if i.checkStart() {
-		log.DefaultLogger.Errorf("[wazero][instance] RegisterFunc not allow to register func after instance started, abiName: %s",
+		log.Logger.Error("[wazero][instance] RegisterFunc not allow to register func after instance started, abiName: %s",
 			abiName)
 		return ErrInstanceAlreadyStart
 	}
@@ -213,7 +213,7 @@ func (i *Instance) RegisterImports(abiName string) error {
 		wasi_snapshot_preview1.NewFunctionExporter().ExportFunctions(wasiBuilder)
 		if _, err := wasiBuilder.Instantiate(ctx); err != nil {
 			r.Close(ctx)
-			log.DefaultLogger.Warnf("[wazero][instance] RegisterImports fail to create wasi_unstable env, err: %v", err)
+			log.Logger.Warn("[wazero][instance] RegisterImports fail to create wasi_unstable env, err: %v", err)
 			panic(err)
 		}
 	case v2.ProxyWasmABI_0_2_0:
@@ -228,7 +228,7 @@ func (i *Instance) RegisterImports(abiName string) error {
 	}
 
 	if _, err := b.Instantiate(ctx); err != nil {
-		log.DefaultLogger.Errorf("[wazero][instance] RegisterImports failed to instantiate ABI %s, err: %v", abiName, err)
+		log.Logger.Error("[wazero][instance] RegisterImports failed to instantiate ABI %s, err: %v", abiName, err)
 		return err
 	}
 	return nil
