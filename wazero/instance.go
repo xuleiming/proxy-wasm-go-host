@@ -21,19 +21,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"sync/atomic"
 
+	"github.com/baidu/go-lib/log"
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
-	"github.com/baidu/go-lib/log"
 
 	importsv1 "github.com/bfenetworks/proxy-wasm-go-host/internal/imports/v1"
-	importsv2 "github.com/bfenetworks/proxy-wasm-go-host/internal/imports/v2"
 	"github.com/bfenetworks/proxy-wasm-go-host/proxywasm/common"
-	v1 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v1"
-	v2 "github.com/bfenetworks/proxy-wasm-go-host/proxywasm/v2"
 )
 
 var (
@@ -180,8 +178,8 @@ func (i *Instance) RegisterImports(abiName string) error {
 	module := "env"
 
 	var hostFunctions func(common.WasmInstance) map[string]interface{}
-	switch abiName {
-	case v1.ProxyWasmABI_0_1_0:
+	if strings.HasPrefix(abiName, "proxy_abi") {
+		// default use importsv1
 		hostFunctions = importsv1.HostFunctions
 
 		// Instantiate WASI also under the unstable name for old compilers,
@@ -193,9 +191,7 @@ func (i *Instance) RegisterImports(abiName string) error {
 			log.Logger.Warn("[wazero][instance] RegisterImports fail to create wasi_unstable env, err: %v", err)
 			panic(err)
 		}
-	case v2.ProxyWasmABI_0_2_0:
-		hostFunctions = importsv2.HostFunctions
-	default:
+	} else {
 		return fmt.Errorf("unknown ABI: %s", abiName)
 	}
 
