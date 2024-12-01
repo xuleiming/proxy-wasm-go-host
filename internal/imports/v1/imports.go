@@ -61,7 +61,7 @@ func HostFunctions(instance common.WasmInstance) map[string]interface{} {
 
 	hostFuncs["proxy_resume_http_request"] = h.ProxyResumeHttpRequest
 	hostFuncs["proxy_resume_http_response"] = h.ProxyResumeHttpResponse
-	hostFuncs["proxy_send_http_response"] = h.ProxySendHttpResponse
+	hostFuncs["proxy_send_local_response"] = h.ProxySendHttpResponse
 
 	hostFuncs["proxy_http_call"] = h.ProxyHttpCall
 	hostFuncs["proxy_dispatch_http_call"] = h.ProxyHttpCall
